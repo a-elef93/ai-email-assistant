@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "sender": "customer@example.com",
+        "subject": "Urgent: Order Status",
+        "category": "order",
+        "priority": "high"
+    },
+    {
+        "id": 2,
+        "sender": "support@example.com",
+        "subject": "Security Camera Issue",
+        "category": "support",
+        "priority": "normal"
+    },
+    {
+        "id": 3,
+        "sender": "info@example.com",
+        "subject": "Business Hours Inquiry",
+        "category": "other",
+        "priority": "normal"
+    }
+]

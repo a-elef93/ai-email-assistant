@@ -23,12 +23,22 @@ with open("emails.json", "r", encoding="utf-8") as file:
     emails = json.load(file)
 
 
-for email in emails:
-    result = analyze_email(email["subject"], email["body"])
+results = []
 
-    print(f"ID: {email['id']}")
-    print(f"From: {email['sender']}")
-    print(f"Subject: {email['subject']}")
-    print(f"Category: {result['category']}")
-    print(f"Priority: {result['priority']}")
-    print("-" * 30)
+for email in emails:
+    analysis = analyze_email(email["subject"], email["body"])
+
+    result = {
+        "id": email["id"],
+        "sender": email["sender"],
+        "subject": email["subject"],
+        "category": analysis["category"],
+        "priority": analysis["priority"]
+    }
+
+    results.append(result)
+
+with open("results.json", "w", encoding="utf-8") as file:
+    json.dump(results, file, indent=4)
+
+print(f"Successfully processed {len(results)} emails.")
