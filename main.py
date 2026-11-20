@@ -1,42 +1,32 @@
 import json
 
-
-def analyze_email(subject: str, body: str) -> dict[str, str]:
-    text = f"{subject}\n{body}".casefold()
-
-    category = "other"
-
-    if "order" in text:
-        category = "order"
-    elif "not working" in text:
-        category = "support"
-
-    priority = "normal"
-
-    if "urgent" in text:
-        priority = "high"
-
-    return {"category": category, "priority": priority}
+from models.email import Email
+from services.email_classifier import EmailClassifier
 
 
 with open("emails.json", "r", encoding="utf-8") as file:
-    emails = json.load(file)
+    emails_data = json.load(file)
 
-
+classifier = EmailClassifier()
 results = []
 
-for email in emails:
-    analysis = analyze_email(email["subject"], email["body"])
+for data in emails_data:
+    email = Email(
+        data["id"],
+        data["sender"],
+        data["subject"],
+        data["body"]
+    )
 
-    result = {
-        "id": email["id"],
-        "sender": email["sender"],
-        "subject": email["subject"],
+    analysis = classifier.classify(email)
+
+    results.append({
+        "id": email.id,
+        "sender": email.sender,
+        "subject": email.subject,
         "category": analysis["category"],
         "priority": analysis["priority"]
-    }
-
-    results.append(result)
+    })
 
 with open("results.json", "w", encoding="utf-8") as file:
     json.dump(results, file, indent=4)
