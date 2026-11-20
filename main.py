@@ -1,22 +1,34 @@
+import json
+
+
 def analyze_email(subject: str, body: str) -> dict[str, str]:
     text = f"{subject}\n{body}".casefold()
 
     category = "other"
-    if "παραγγελία" in text:
+
+    if "order" in text:
         category = "order"
-    elif "δεν λειτουργεί" in text:
+    elif "not working" in text:
         category = "support"
 
     priority = "normal"
-    if "επείγον" in text:
+
+    if "urgent" in text:
         priority = "high"
 
     return {"category": category, "priority": priority}
 
 
-result = analyze_email(
-    subject=" Παραγγελία για αύριο",
-    body="Μπορείτε να μου επιβεβαιώσετε αν θα παραδοθεί αύριο;",
-)
+with open("emails.json", "r", encoding="utf-8") as file:
+    emails = json.load(file)
 
-print(result)
+
+for email in emails:
+    result = analyze_email(email["subject"], email["body"])
+
+    print(f"ID: {email['id']}")
+    print(f"From: {email['sender']}")
+    print(f"Subject: {email['subject']}")
+    print(f"Category: {result['category']}")
+    print(f"Priority: {result['priority']}")
+    print("-" * 30)
