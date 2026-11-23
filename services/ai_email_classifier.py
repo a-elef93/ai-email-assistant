@@ -6,12 +6,8 @@ from pydantic import BaseModel
 from typing import Literal
 
 from models.email import Email
+from models.email_analysis import EmailAnalysis
 
-
-class EmailAnalysis(BaseModel):
-    category: Literal["order", "support", "other"]
-    priority: Literal["high", "normal", "low"]
-    reason: str
 
 
 class AIEmailClassifier:

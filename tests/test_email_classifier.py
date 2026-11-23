@@ -17,7 +17,7 @@ class TestEmailClassifier(unittest.TestCase):
 
         result = self.classifier.classify(email)
 
-        self.assertEqual(result["category"], "order")
+        self.assertEqual(result.category, "order")
 
     def test_support_classification(self):
         email = Email(
@@ -27,7 +27,7 @@ class TestEmailClassifier(unittest.TestCase):
 
         result = self.classifier.classify(email)
 
-        self.assertEqual(result["category"], "support")
+        self.assertEqual(result.category, "support")
 
     def test_urgent_priority(self):
         email = Email(
@@ -37,7 +37,7 @@ class TestEmailClassifier(unittest.TestCase):
 
         result = self.classifier.classify(email)
 
-        self.assertEqual(result["priority"], "high")
+        self.assertEqual(result.priority, "high")
 
 
 if __name__ == "__main__":

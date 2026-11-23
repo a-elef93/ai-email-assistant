@@ -5,7 +5,7 @@ from services.email_classifier import EmailClassifier
 from services.ai_email_classifier import AIEmailClassifier
 
 
-USE_AI = True  # Change to True to enable OpenAI API
+USE_AI = False  # Change to True to enable OpenAI API
 
 
 def main():
@@ -29,22 +29,11 @@ def main():
 
         analysis = classifier.classify(email)
 
-        if USE_AI:
-            category = analysis.category
-            priority = analysis.priority
-            reason = analysis.reason
-        else:
-            category = analysis["category"]
-            priority = analysis["priority"]
-            reason = "Classified using predefined keyword rules."
-
         results.append({
             "id": email.id,
             "sender": email.sender,
             "subject": email.subject,
-            "category": category,
-            "priority": priority,
-            "reason": reason
+            **analysis.model_dump()
         })
 
     with open("results.json", "w", encoding="utf-8") as file:

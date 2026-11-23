@@ -1,11 +1,12 @@
 from models.email import Email
+from models.email_analysis import EmailAnalysis
 
 
 class EmailClassifier:
     def __init__(self):
         self.categories = ["order", "support", "other"]
 
-    def classify(self, email: Email) -> dict[str, str]:
+    def classify(self, email: Email) -> EmailAnalysis:
         text = f"{email.subject}\n{email.body}".casefold()
 
         category = "other"
@@ -20,4 +21,8 @@ class EmailClassifier:
         if "urgent" in text:
             priority = "high"
 
-        return {"category": category, "priority": priority}
+        return EmailAnalysis(
+            category=category,
+            priority=priority,
+            reason="Classified using predefined keyword rules."
+        )
