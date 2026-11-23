@@ -2,33 +2,57 @@ import json
 
 from models.email import Email
 from services.email_classifier import EmailClassifier
+from services.ai_email_classifier import AIEmailClassifier
 
 
-with open("emails.json", "r", encoding="utf-8") as file:
-    emails_data = json.load(file)
+USE_AI = True  # Change to True to enable OpenAI API
 
-classifier = EmailClassifier()
-results = []
 
-for data in emails_data:
-    email = Email(
-        data["id"],
-        data["sender"],
-        data["subject"],
-        data["body"]
-    )
+def main():
+    with open("emails.json", "r", encoding="utf-8") as file:
+        emails_data = json.load(file)
 
-    analysis = classifier.classify(email)
+    if USE_AI:
+        classifier = AIEmailClassifier()
+    else:
+        classifier = EmailClassifier()
 
-    results.append({
-        "id": email.id,
-        "sender": email.sender,
-        "subject": email.subject,
-        "category": analysis["category"],
-        "priority": analysis["priority"]
-    })
+    results = []
 
-with open("results.json", "w", encoding="utf-8") as file:
-    json.dump(results, file, indent=4)
+    for data in emails_data:
+        email = Email(
+            data["id"],
+            data["sender"],
+            data["subject"],
+            data["body"]
+        )
 
-print(f"Successfully processed {len(results)} emails.")
+        analysis = classifier.classify(email)
+
+        if USE_AI:
+            category = analysis.category
+            priority = analysis.priority
+            reason = analysis.reason
+        else:
+            category = analysis["category"]
+            priority = analysis["priority"]
+            reason = "Classified using predefined keyword rules."
+
+        results.append({
+            "id": email.id,
+            "sender": email.sender,
+            "subject": email.subject,
+            "category": category,
+            "priority": priority,
+            "reason": reason
+        })
+
+    with open("results.json", "w", encoding="utf-8") as file:
+        json.dump(results, file, indent=4)
+
+    print(f"Successfully processed {len(results)} emails.")
+    print(f"Mode: {'AI' if USE_AI else 'Offline'}")
+
+
+if __name__ == "__main__":
+    main()
