@@ -1,5 +1,6 @@
 import json
 
+from database.database_manager import DatabaseManager
 from models.email import Email
 from services.email_classifier import EmailClassifier
 from services.ai_email_classifier import AIEmailClassifier
@@ -22,6 +23,9 @@ def main():
 
     classifier = AIEmailClassifier() if USE_AI else EmailClassifier()
 
+    db = DatabaseManager()
+    db.create_tables()
+
     results = []
 
     for data in emails_data:
@@ -35,12 +39,15 @@ def main():
 
             analysis = classifier.classify(email)
 
-            results.append({
-                "id": email.id,
-                "sender": email.sender,
-                "subject": email.subject,
-                **analysis.model_dump()
-            })
+            result = {
+            "id": email.id,
+            "sender": email.sender,
+            "subject": email.subject,
+            **analysis.model_dump()
+            }
+
+            results.append(result)
+            db.save_result(result)
 
             logger.info("Email %s processed successfully", email.id)
 
