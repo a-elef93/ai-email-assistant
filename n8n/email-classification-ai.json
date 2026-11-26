@@ -1,0 +1,112 @@
+{
+  "name": "AI Email Assistant - Email Classification",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        16
+      ],
+      "id": "dfa3b572-af4c-40e4-9071-f2a81e2eceb5",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e4af0af1-9152-4b25-aab5-1b7fbdbba7c3",
+              "name": "id",
+              "value": 11,
+              "type": "number"
+            },
+            {
+              "id": "552d1d87-ba8e-4872-aad1-0fbda7047122",
+              "name": "sender",
+              "value": "customer@example.com",
+              "type": "string"
+            },
+            {
+              "id": "ff404e21-ad34-4818-843e-5d1c5369118b",
+              "name": "subject",
+              "value": "Urgent Oder Request",
+              "type": "string"
+            },
+            {
+              "id": "a81987d8-30fc-4535-b0ad-7ec791822395",
+              "name": "body",
+              "value": "I need an update on my order as soon as possible.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        96,
+        0
+      ],
+      "id": "3435fc23-fb8b-4d1a-adbb-e523aef3f236",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8000/analyze?mode=ai",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        368,
+        16
+      ],
+      "id": "375f90d4-4395-41d7-8e78-bdb6f34160a5",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "236013b0-3fea-44b1-9e2a-8da3be113940",
+  "meta": {
+    "instanceId": "7e177b465c5de1f26acd5aaebb05ab22df5d49f8fe099e52050aaffc31d67235"
+  },
+  "nodeGroups": [],
+  "id": "vNkdaLmKQA4dy871",
+  "tags": []
+}
