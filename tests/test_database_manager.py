@@ -17,8 +17,8 @@ class TestDatabaseManager(unittest.TestCase):
         self.db = DatabaseManager(self.temp_db.name)
         self.db.create_tables()
 
-def tearDown(self):
-    os.unlink(self.temp_db.name)
+    def tearDown(self):
+        os.unlink(self.temp_db.name)
 
     def test_save_result(self):
         result = {
